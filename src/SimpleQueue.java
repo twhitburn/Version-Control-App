@@ -4,7 +4,7 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 	E items[];
 	int numItems;
 	int frontIndex;
-	int rearIndex;
+	int rearIndex; //First unused element
 	private static final int INITSIZE = 10;
 
 	@SuppressWarnings("unchecked")
@@ -31,7 +31,7 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 		numItems--;
 		//need second thought here
 		if (numItems == 0) {
-			frontIndex = 0;
+			frontIndex = -1;
 			rearIndex = 0;
 		}
 		return temp;
@@ -49,12 +49,15 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 				rearIndex = numItems - 1;
 			}
 		}
-		//reset frontIndex
-		if (frontIndex == numItems - 1) 
+		if (frontIndex == -1) {
 			frontIndex = 0;
+		}
+		items[rearIndex] = item;
 		//Increment rearIndex
 		rearIndex++;
-		items[rearIndex] = item;
+		if (rearIndex == items.length) {
+			rearIndex = 0;
+		}
 		numItems++;
 	}
 
@@ -71,8 +74,11 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 
 		String temp = new String();
 
-		for ( int i = numItems-1; i <= 0; i++) {
+		for ( int i = frontIndex; i < rearIndex; i++) {
 			temp = (temp + (items[i].toString() + "\n"));
+			if (i == items.length) {
+				i = -1;
+			}
 		}
 
 		return temp;

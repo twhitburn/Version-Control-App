@@ -32,7 +32,11 @@ public class SimpleStack<E> implements StackADT<E> {
 
 	public void push(E item) {
 		if (items.length == numItems) {
-			//TODO expand array here
+			E tempitems[] = items;
+			items = (E[])(new Object[2*INITSIZE]);
+			for (int i = 0; i < tempitems.length; i++) {
+				items[i] = tempitems[i];
+			}
 		}
 		//Set last item
 		items[numItems] = item;
@@ -48,7 +52,7 @@ public class SimpleStack<E> implements StackADT<E> {
 	public String toString() {
 		String temp = new String();
 
-		for ( int i = numItems-1; i <= 0; i++) {
+		for ( int i = numItems-1; i >= 0; i--) {
 			temp = (temp + (items[i].toString() + "\n"));
 		}
 
