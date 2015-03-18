@@ -7,37 +7,75 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 	int rearIndex;
 	private static final int INITSIZE = 10;
 
+	@SuppressWarnings("unchecked")
 	public SimpleQueue() {
-		
+		items = (E[])(new Object[INITSIZE]);
+		numItems = 0;
+		frontIndex = 0;
+		rearIndex = 0;
 	}
-	
+
 	public boolean isEmpty() {
+
 		if (numItems <= 0) return true;
 		return false;
 	}
 
 	public E dequeue() throws EmptyQueueException {
-		// TODO
-		return null;
+
+		if (numItems == 0) {
+			throw new EmptyQueueException();
+		}
+		E temp = items[frontIndex];
+		frontIndex++;
+		numItems--;
+		//need second thought here
+		if (numItems == 0) {
+			frontIndex = 0;
+			rearIndex = 0;
+		}
+		return temp;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void enqueue(E item) {
-		// TODO
 
+		if (numItems == items.length) {
+			E tempitems[] = items;
+			items = (E[])(new Object[2*INITSIZE]);
+			for (int i = 0; i < tempitems.length; i++) {
+				items[i] = tempitems[i];
+				frontIndex = 0;
+				rearIndex = numItems - 1;
+			}
+		}
+		//reset frontIndex
+		if (frontIndex == numItems - 1) 
+			frontIndex = 0;
+		//Increment rearIndex
+		rearIndex++;
+		items[rearIndex] = item;
+		numItems++;
 	}
 
 	public E peek() throws EmptyQueueException {
-		// TODO
-		return null;
+		return items[frontIndex];
 	}
 
 	public int size() {
 		return numItems;
 	}
-	
+
 	@Override
 	public String toString() {
-		return null;
+
+		String temp = new String();
+
+		for ( int i = numItems-1; i <= 0; i++) {
+			temp = (temp + (items[i].toString() + "\n"));
+		}
+
+		return temp;
 	}
 
 }
