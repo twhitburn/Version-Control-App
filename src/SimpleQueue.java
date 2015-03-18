@@ -1,34 +1,43 @@
 
 public class SimpleQueue<E> implements QueueADT<E>  {
 
-	@Override
+	E items[];
+	int numItems;
+	int frontIndex;
+	int rearIndex;
+	private static final int INITSIZE = 10;
+
+	public SimpleQueue() {
+		
+	}
+	
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
+		if (numItems <= 0) return true;
 		return false;
 	}
 
-	@Override
 	public E dequeue() throws EmptyQueueException {
-		// TODO Auto-generated method stub
+		// TODO
 		return null;
 	}
 
-	@Override
 	public void enqueue(E item) {
-		// TODO Auto-generated method stub
-		
+		// TODO
+
 	}
 
-	@Override
 	public E peek() throws EmptyQueueException {
-		// TODO Auto-generated method stub
+		// TODO
 		return null;
 	}
 
-	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return numItems;
+	}
+	
+	@Override
+	public String toString() {
+		return null;
 	}
 
 }

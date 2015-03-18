@@ -1,34 +1,59 @@
 
 public class SimpleStack<E> implements StackADT<E> {
 
-	@Override
+	private E items[];
+	int numItems;
+	private static final int INITSIZE = 10;
+	
+	public SimpleStack() {
+		items = (E[])(new Object[INITSIZE]);
+	    numItems = 0;
+	}
+	
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
+		if (numItems <= 0) return true;
 		return false;
 	}
 
-	@Override
 	public E peek() throws EmptyStackException {
-		// TODO Auto-generated method stub
-		return null;
+		return items[numItems-1];
 	}
 
-	@Override
 	public E pop() throws EmptyStackException {
-		// TODO Auto-generated method stub
-		return null;
+		//Check if empty
+		if (isEmpty()) {
+			throw new EmptyStackException();
+		}
+		//Decrement numItems
+		numItems--;
+		//Return popped item
+		return items[numItems];
 	}
 
-	@Override
 	public void push(E item) {
-		// TODO Auto-generated method stub
-		
+		if (items.length == numItems) {
+			//TODO expand array here
+		}
+		//Set last item
+		items[numItems] = item;
+		//Increment numItems
+		numItems++;
 	}
 
-	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return numItems;
+	}
+	
+	@Override
+	public String toString() {
+		String temp = new String();
+		
+		for ( int i = numItems-1; i <= 0; i++) {
+			temp = (temp + (items[i].toString() + "\n"));
+		}
+		
+		return temp;
+		
 	}
 
 }
