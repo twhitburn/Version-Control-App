@@ -37,11 +37,14 @@ public class Repo {
 		// TODO: Implement this contructor. The following lines 
 		// are just meant for the method to compile. You should 
 		// remove or edit it in whatever way you like.
-		this.admin = null;
-		this.repoName =  null;
-		this.docs =  null;
-		this.checkIns =  null;
-		this.versionRecords =  null;
+		this.admin = admin;
+		this.repoName =  repoName;
+		this.docs = new ArrayList<Document>() ;
+		this.checkIns = new SimpleQueue<ChangeSet>();
+		this.versionRecords =  new SimpleStack<RepoCopy>();
+		this.version = 0;
+		RepoCopy tempCopy = new RepoCopy(repoName, 0, docs);
+		versionRecords.push(tempCopy);
 	}
 	
 	/**
@@ -104,18 +107,28 @@ public class Repo {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it in whatever way you like.
-		return 0;
+		return versionRecords.size();
 	}
 	
 	/**
 	 * Returns the history of changes made to the repository. 
 	 * @return The string containing the history of changes.
+	 * @throws EmptyStackException 
 	 */
-	public String getVersionHistory() {
+	public String getVersionHistory() throws EmptyStackException {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it in whatever way you like.
-		return null;
+		String vh = null;
+		RepoCopy currCopy;
+		//make a copy of the versionRecords stack so the original one remains 
+		//unchanged.
+		StackADT<RepoCopy> tmpCopies = versionRecords;
+		for (int i = tmpCopies.size() - 1; i >= 0; i--) {
+			currCopy = tmpCopies.pop();
+			vh += currCopy.toString();
+		}
+		return vh;
 	}
 	
 	/**
@@ -126,7 +139,7 @@ public class Repo {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it in whatever way you like.
-		return 0;
+		return checkIns.size();
 	}
 	
 	
@@ -136,7 +149,8 @@ public class Repo {
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
 	public void queueCheckIn(ChangeSet checkIn) {
-		// TODO: Implement this method. 
+		// TODO: Implement this method.
+		checkIns.enqueue(checkIn);
 	}
 	
 	/**
@@ -145,13 +159,16 @@ public class Repo {
 	 * @param requestingUser The user requesting for the change set.
 	 * @return The checkin if the requestingUser is the admin and a checkin
 	 * exists, null otherwise.
+	 * @throws EmptyQueueException 
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
-	public ChangeSet getNextCheckIn(User requestingUser) {
+	public ChangeSet getNextCheckIn(User requestingUser) throws EmptyQueueException {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it in whatever way you like.
-		return null;
+		if (!requestingUser.equals(admin) || checkIns.isEmpty())
+			return null;
+		return checkIns.dequeue();
 	}
 	
 	/**
@@ -168,6 +185,9 @@ public class Repo {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it whatever way you like.
+		if (requestingUser.equals(admin)) {
+			
+		}
 		return null;
 	}
 	
