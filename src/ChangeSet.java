@@ -48,16 +48,10 @@ public class ChangeSet {
 	/**
 	 * Returns and removes the next change from the change set.
 	 * @return The next change if present, null otherwise.
+	 * @throws EmptyQueueException 
 	 */
-	public Change getNextChange() {
-
-		try {
+	public Change getNextChange() throws EmptyQueueException {
 			return changes.dequeue();
-		} catch (EmptyQueueException e) {
-			System.out.println("No changes present.");
-		}
-		return null;
-
 	}
 
 	/**

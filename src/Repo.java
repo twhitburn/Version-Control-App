@@ -159,12 +159,16 @@ public class Repo {
 	 * @param checkIn The checkIn to approve.
 	 * @return ACCESS_DENIED if requestingUser is not the admin, SUCCESS 
 	 * otherwise.
+	 * @throws EmptyQueueException 
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
-	public ErrorType approveCheckIn(User requestingUser, ChangeSet checkIn) {
+	public ErrorType approveCheckIn(User requestingUser, ChangeSet checkIn) throws EmptyQueueException {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it whatever way you like.
+		if (requestingUser == null || checkIn == null) {
+			throw new IllegalArgumentException();
+		}
 		if (requestingUser.equals(admin)) {
 			for (int i = 0; i < checkIn.getChangeCount(); i++) {
 				Change temp = checkIn.getNextChange();
