@@ -253,18 +253,17 @@ public class VersionControlApp {
 			switch (cmd) {
 			case AR:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle AR.
 					String tempName = words[1];
 					if (VersionControlDb.addRepo(tempName, logInUser) == null){
 						System.out.println("REPONAME_ALREADY_EXISTS");
 						break;
 					}
+					logInUser.subscribeRepo(tempName);
 					System.out.println("SUCCESS");
 				}
 				break;
 			case DR:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle DR.
 					String tempName = words[1];
 					if (VersionControlDb.findRepo(tempName) == null) {
 						System.out.println("REPO_NOT_FOUND");
@@ -280,13 +279,11 @@ public class VersionControlApp {
 				break;
 			case LR:
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle LR.
 					System.out.println(logInUser.toString());
 				}
 				break;
 			case OR:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle OR.
 					String tempName = words[1];
 					ErrorType temp = logInUser.checkOut(tempName);
 					if (temp.equals(ErrorType.SUCCESS)) {
@@ -340,22 +337,58 @@ public class VersionControlApp {
 			switch (cmd) {
 			case SU:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle SU.
+					String userName = words[1];
+					Repo tempRepo =  VersionControlDb.findRepo(currRepo);
+					if (tempRepo.getAdmin().equals(logInUser)) {
+						VersionControlDb.findUser(userName).subscribeRepo(currRepo);
+						System.out.println("SUCCESS");
+						break;
+					}
+					else {
+						System.out.println("ACCESS_DENIED");
+					}
 				}
 				break;
 			case LD:
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle LD.
+					
+					for (int i = 0; i < VersionControlDb.findRepo(currRepo).
+							getDocuments().size(); i++) {
+						System.out.println(VersionControlDb.findRepo(currRepo).
+								getDocuments().get(i).toString());
+					}
 				}
 				break;
 			case ED:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle ED.
+					String docName = words[1];
+					if (VersionControlDb.findRepo(currRepo).
+							getDocument(docName) == null) {
+						System.out.println("DOC_NOT_FOUND");
+					}
+					Document tempDoc = VersionControlDb.findRepo(currRepo).
+											getDocument(docName);
+					
+					tempDoc.setContent(promptFileContent("Enter the file "
+							+ "content and press q to quit:"));
+					System.out.println("SUCCESS");
 				}					
 				break;
 			case AD:
 				if (validateInput2(words)) {
 					// TODO: Implement logic to handle AD.
+					String docName = words[1];
+					if (VersionControlDb.findRepo(currRepo).
+							getDocument(docName) != null) {
+						System.out.println("DOCNAME_ALREADY_EXISTS");
+					}
+					System.out.println("Enter the file content and press q "
+							+ "to quit:");
+					
+					String content = promptFileContent("Enter the file "
+							+ "content and press q to quit:");
+					Document tempDoc = new Document(docName, content, currRepo);
+					System.out.println("SUCCESS");
 				}
 				break;
 			case DD:
