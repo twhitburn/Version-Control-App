@@ -254,21 +254,49 @@ public class VersionControlApp {
 			case AR:
 				if (validateInput2(words)) {
 					// TODO: Implement logic to handle AR.
+					String tempName = words[1];
+					if (VersionControlDb.addRepo(tempName, logInUser) == null){
+						System.out.println("REPONAME_ALREADY_EXISTS");
+						break;
+					}
+					System.out.println("SUCCESS");
 				}
 				break;
 			case DR:
 				if (validateInput2(words)) {
 					// TODO: Implement logic to handle DR.
+					String tempName = words[1];
+					if (VersionControlDb.findRepo(tempName) == null) {
+						System.out.println("REPO_NOT_FOUND");
+						break;
+					}
+					if (!VersionControlDb.findRepo(tempName).getAdmin().equals(logInUser)) {
+						System.out.println("ACCESS_DENIED");
+						break;
+					}
+					VersionControlDb.delRepo(VersionControlDb.findRepo(tempName));
+					System.out.println("SUCCESS");
 				}
 				break;
 			case LR:
 				if (validateInput1(words)) {
 					// TODO: Implement logic to handle LR.
+					System.out.println(logInUser.toString());
 				}
 				break;
 			case OR:
 				if (validateInput2(words)) {
 					// TODO: Implement logic to handle OR.
+					String tempName = words[1];
+					ErrorType temp = logInUser.checkOut(tempName);
+					if (temp.equals(ErrorType.SUCCESS)) {
+						System.out.println("SUCCESS");
+						processRepoMenu(logInUser, tempName);	
+					}
+					else if (temp.equals(ErrorType.REPO_NOT_SUBSCRIBED)) {
+						System.out.println("REPO_NOT_SUBSCRIBED");
+					}
+
 				}
 				break;
 			case LO:

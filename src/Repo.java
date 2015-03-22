@@ -203,9 +203,10 @@ public class Repo {
 	 * @return ACCESS_DENIED if requestingUser is not the admin, 
 	 * NO_OLDER_VERSION if the present version is the oldest version, SUCCESS 
 	 * otherwise.
+	 * @throws EmptyStackException 
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
-	public ErrorType revert(User requestingUser) {
+	public ErrorType revert(User requestingUser) throws EmptyStackException {
 		// TODO: Implement this method. The following lines 
 		// are just meant for the method to compile. You can 
 		// remove or edit it whatever way you like.
@@ -216,12 +217,14 @@ public class Repo {
 			if (version < 2) {
 				return ErrorType.NO_OLDER_VERSION;
 			}
+			versionRecords.pop();
 			RepoCopy temp = versionRecords.peek();
+			versionRecords.push(temp);
 			//TODO
 			
 			//this.repoName
 		}
 		
-		return null;
+		return ErrorType.ACCESS_DENIED;
 	}
 }
