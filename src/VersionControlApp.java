@@ -119,7 +119,7 @@ public class VersionControlApp {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Returns the Cmd equivalent for a string command. 
 	 * @param strCmd The string command.
@@ -340,9 +340,15 @@ public class VersionControlApp {
 					String userName = words[1];
 					Repo tempRepo =  VersionControlDb.findRepo(currRepo);
 					if (tempRepo.getAdmin().equals(logInUser)) {
-						VersionControlDb.findUser(userName).subscribeRepo(currRepo);
-						System.out.println("SUCCESS");
-						break;
+						if (VersionControlDb.findUser(userName) != null) { 
+							VersionControlDb.findUser(userName).subscribeRepo(currRepo);
+							System.out.println("SUCCESS");
+							break;
+						}
+						else {
+							System.out.println("USER_NOT_FOUND");
+							break;
+						}
 					}
 					else {
 						System.out.println("ACCESS_DENIED");
@@ -350,8 +356,9 @@ public class VersionControlApp {
 				}
 				break;
 			case LD:
+				//TODO Bug Does not work
 				if (validateInput1(words)) {
-					
+
 					for (int i = 0; i < VersionControlDb.findRepo(currRepo).
 							getDocuments().size(); i++) {
 						System.out.println(VersionControlDb.findRepo(currRepo).
@@ -367,8 +374,8 @@ public class VersionControlApp {
 						System.out.println("DOC_NOT_FOUND");
 					}
 					Document tempDoc = VersionControlDb.findRepo(currRepo).
-											getDocument(docName);
-					
+							getDocument(docName);
+
 					tempDoc.setContent(promptFileContent("Enter the file "
 							+ "content and press q to quit:"));
 					System.out.println("SUCCESS");
@@ -384,7 +391,7 @@ public class VersionControlApp {
 					}
 					System.out.println("Enter the file content and press q "
 							+ "to quit:");
-					
+
 					String content = promptFileContent("Enter the file "
 							+ "content and press q to quit:");
 					Document tempDoc = new Document(docName, content, currRepo);
