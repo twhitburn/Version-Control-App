@@ -291,11 +291,7 @@ public class VersionControlApp {
 						try {
 							processRepoMenu(logInUser, tempName);
 						} catch (EmptyQueueException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						} catch (EmptyStackException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}	
 					}
 					else if (temp.equals(ErrorType.REPO_NOT_SUBSCRIBED)) {
@@ -407,8 +403,7 @@ public class VersionControlApp {
 							+ "content and press q to quit:");
 					//create the temp doc
 					Document tempDoc = new Document(docName, content, currRepo);
-					//adds the document to the working copy
-					//TODO: 
+					//adds the document to the working copy 
 					logInUser.getWorkingCopy(currRepo).addDoc(tempDoc);
 					//adds the change to the user's pending checkin for the 
 					//current repository
@@ -467,8 +462,25 @@ public class VersionControlApp {
 				break;
 			case RC:
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle RC.
-					
+					// 
+					ChangeSet tempChst = logInUser.getPendingCheckIn(currRepo);
+					if (tempChst.getChangeCount() == 0) {
+						System.out.println(ErrorType.NO_PENDING_CHECKINS);
+						break;
+					}
+					if (!logInUser.getName().equals(VersionControlDb.findRepo(currRepo).getAdmin().getName())) {
+						System.out.println(ErrorType.ACCESS_DENIED);
+						break;
+					}
+					for (int i = 0; i < tempChst.getChangeCount(); i++) {
+						Change tempChange = tempChst.getNextChange();
+						System.out.println(tempChange.toString());
+					}
+					System.out.println("\nApprove changes? Press y to accept: ");
+					if (scnr.next().equals("y")) {
+						VersionControlDb.findRepo(currRepo).approveCheckIn(logInUser, tempChst);
+						System.out.println(ErrorType.SUCCESS);
+					}
 				}
 				break;
 			case VH:
