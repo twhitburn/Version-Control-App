@@ -288,7 +288,15 @@ public class VersionControlApp {
 					ErrorType temp = logInUser.checkOut(tempName);
 					if (temp.equals(ErrorType.SUCCESS)) {
 						System.out.println("SUCCESS");
-						processRepoMenu(logInUser, tempName);	
+						try {
+							processRepoMenu(logInUser, tempName);
+						} catch (EmptyQueueException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (EmptyStackException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}	
 					}
 					else if (temp.equals(ErrorType.REPO_NOT_SUBSCRIBED)) {
 						System.out.println("REPO_NOT_SUBSCRIBED");
@@ -318,9 +326,11 @@ public class VersionControlApp {
 	 * working repository.
 	 * @param logInUser The logged in user. 
 	 * @param currRepo The current working repo.
+	 * @throws EmptyQueueException 
+	 * @throws EmptyStackException 
 	 * @throws IllegalArgumentException in case any argument is null.
 	 */
-	public static void processRepoMenu(User logInUser, String currRepo) {
+	public static void processRepoMenu(User logInUser, String currRepo) throws EmptyQueueException, EmptyStackException {
 
 		if (logInUser  == null || currRepo == null) {
 			throw new IllegalArgumentException();
@@ -372,65 +382,107 @@ public class VersionControlApp {
 					if (VersionControlDb.findRepo(currRepo).
 							getDocument(docName) == null) {
 						System.out.println("DOC_NOT_FOUND");
+						break;
 					}
 					Document tempDoc = VersionControlDb.findRepo(currRepo).
 							getDocument(docName);
 
 					tempDoc.setContent(promptFileContent("Enter the file "
 							+ "content and press q to quit:"));
+					logInUser.addToPendingCheckIn(tempDoc, Change.Type.EDIT, 
+							currRepo);
 					System.out.println("SUCCESS");
 				}					
 				break;
 			case AD:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle AD.
+					
 					String docName = words[1];
 					if (VersionControlDb.findRepo(currRepo).
 							getDocument(docName) != null) {
 						System.out.println("DOCNAME_ALREADY_EXISTS");
+						break;
 					}
-					System.out.println("Enter the file content and press q "
-							+ "to quit:");
-
 					String content = promptFileContent("Enter the file "
 							+ "content and press q to quit:");
+					//create the temp doc
 					Document tempDoc = new Document(docName, content, currRepo);
+					//adds the document to the working copy
+					//TODO: 
+					logInUser.getWorkingCopy(currRepo).addDoc(tempDoc);
+					//adds the change to the user's pending checkin for the 
+					//current repository
+					logInUser.addToPendingCheckIn(tempDoc, Change.Type.ADD, 
+							currRepo);
 					System.out.println("SUCCESS");
 				}
 				break;
 			case DD:
 				if (validateInput2(words)) {
 					// TODO: Implement logic to handle DD.
+					String docName = words[1];
+					//Prints DOCNAME_ALREADY_EXISTS, if the document with 
+					//<docname> already exists in the working copy
+					if (VersionControlDb.findRepo(currRepo).
+							getDocument(docName) == null) {
+						System.out.println("DOC_NOT_FOUND");
+						break;
+					}
+					Document tempDoc = VersionControlDb.findRepo(currRepo).
+							getDocument(docName);
+					//deletes the document from the working copy
+					logInUser.getWorkingCopy(currRepo).delDoc(tempDoc);
+					//adds the change to the user's pending checkin for the 
+					//current repository
+					logInUser.addToPendingCheckIn(tempDoc, Change.Type.DEL, 
+							currRepo);
+					System.out.println("SUCCESS");	
 				}
 				break;
 			case VD:
 				if (validateInput2(words)) {
 					// TODO: Implement logic to handle VD.
+					String docName = words[1];
+					if (logInUser.getWorkingCopy(currRepo).getDoc(docName) 
+							== null) {
+						System.out.println("DOC_NOT_FOUND");
+					}
+					else{
+						System.out.println(logInUser.getWorkingCopy(currRepo).
+								getDoc(docName).toString());
+					}
 				}
 				break;
 			case CI:
 				if (validateInput1(words)) {
 					// TODO: Implement logic to handle CI.
+					System.out.println(logInUser.checkIn(currRepo));
 				}
 				break;
 			case CO:
 				if (validateInput1(words)) {
 					// TODO: Implement logic to handle CO.
+					System.out.println(logInUser.checkOut(currRepo));
 				}
 				break;
 			case RC:
 				if (validateInput1(words)) {
 					// TODO: Implement logic to handle RC.
+					
 				}
 				break;
 			case VH:
 				if (validateInput1(words)) {
 					// TODO: Implement logic to handle VH.
+					System.out.println(VersionControlDb.findRepo(currRepo).
+							getVersionHistory());
 				}
 				break;
 			case RE:	
 				if (validateInput1(words)) {
 					// TODO: Implement logic to handle RE.
+					System.out.println(VersionControlDb.findRepo(currRepo).
+							revert(logInUser));
 				}
 				break;
 			case HE:
