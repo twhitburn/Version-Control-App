@@ -365,11 +365,10 @@ public class VersionControlApp {
 				//TODO Bug Does not work
 				if (validateInput1(words)) {
 
-					for (int i = 0; i < VersionControlDb.findRepo(currRepo).
-							getDocuments().size(); i++) {
-						System.out.println(VersionControlDb.findRepo(currRepo).
-								getDocuments().get(i).toString());
-					}
+
+					System.out.println(logInUser.getWorkingCopy(currRepo).toString());
+
+
 				}
 				break;
 			case ED:
@@ -392,7 +391,7 @@ public class VersionControlApp {
 				break;
 			case AD:
 				if (validateInput2(words)) {
-					
+
 					String docName = words[1];
 					if (VersionControlDb.findRepo(currRepo).
 							getDocument(docName) != null) {
