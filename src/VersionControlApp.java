@@ -362,12 +362,8 @@ public class VersionControlApp {
 				}
 				break;
 			case LD:
-				//TODO Bug Does not work
 				if (validateInput1(words)) {
-
-
 					System.out.println(logInUser.getWorkingCopy(currRepo).toString());
-
 
 				}
 				break;
@@ -461,26 +457,41 @@ public class VersionControlApp {
 				break;
 			case RC:
 				if (validateInput1(words)) {
-					// 
-					ChangeSet tempChst = logInUser.getPendingCheckIn(currRepo);
-					if (tempChst.getChangeCount() == 0) {
-						System.out.println(ErrorType.NO_PENDING_CHECKINS);
-						break;
-					}
+					//Check user is admin
 					if (!logInUser.getName().equals(VersionControlDb.findRepo(currRepo).getAdmin().getName())) {
 						System.out.println(ErrorType.ACCESS_DENIED);
 						break;
 					}
-					for (int i = 0; i < tempChst.getChangeCount(); i++) {
-						Change tempChange = tempChst.getNextChange();
-						System.out.println(tempChange.toString());
+					//Check for changes
+					if (VersionControlDb.findRepo(currRepo).getCheckInCount() == 0) {
+						System.out.println(ErrorType.NO_LOCAL_CHANGES);
 					}
-					System.out.println("\nApprove changes? Press y to accept: ");
-					if (scnr.next().equals("y")) {
-						VersionControlDb.findRepo(currRepo).approveCheckIn(logInUser, tempChst);
+					
+					SimpleQueue<ChangeSet> tempQueue = new SimpleQueue<ChangeSet>();
+					
+					for (int i = 0; i < VersionControlDb.findRepo(currRepo).getCheckInCount(); i++) {
+					//System.out.println(VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser).toString());	
+					ChangeSet temp = VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser);
+					tempQueue.enqueue(temp);
+					System.out.println(temp.toString());
+					}
+					//restore queue
+					for (int i = 0; i <tempQueue.size(); i++) {
+						VersionControlDb.findRepo(currRepo).queueCheckIn(tempQueue.dequeue());
+					}
+					
+					System.out.print("\nApprove changes? Press y to accept: ");
+					if (scnr.nextLine().equals("y")) {
+						
+						for (int i = 0; i < VersionControlDb.findRepo(currRepo).getCheckInCount(); i++) {
+							VersionControlDb.findRepo(currRepo).approveCheckIn(logInUser, VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser));
+							}
 						System.out.println(ErrorType.SUCCESS);
 					}
+				
+				
 				}
+				
 				break;
 			case VH:
 				if (validateInput1(words)) {
@@ -525,7 +536,7 @@ public class VersionControlApp {
 		catch (Exception e) {
 			System.out.println(ErrorType.INTERNAL_ERROR);
 			// Uncomment this to print the stack trace for debugging purpose.
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		// Any clean up code goes here.
 		finally {

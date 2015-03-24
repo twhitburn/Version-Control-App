@@ -214,15 +214,14 @@ public class Repo {
 			throw new IllegalArgumentException();
 		}
 		if (requestingUser.equals(admin)) {
-			if (version < 2) {
+			if (version < 1) {
 				return ErrorType.NO_OLDER_VERSION;
 			}
 			versionRecords.pop();
-			RepoCopy temp = versionRecords.peek();
-			versionRecords.push(temp);
-			//TODO
-			
-			//this.repoName
+			version--;
+			this.docs.clear();
+			this.docs.addAll(versionRecords.peek().getDocuments());
+			return ErrorType.SUCCESS;
 		}
 		
 		return ErrorType.ACCESS_DENIED;

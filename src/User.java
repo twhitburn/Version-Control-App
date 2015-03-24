@@ -164,16 +164,17 @@ public class User {
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
 	public ErrorType checkIn(String repoName) {
+		//TODO
 		if (repoName == null) {
 			throw new IllegalArgumentException();
 		}
 		//find the Repo and user from DB class
-		Repo tempRepo = VersionControlDb.findRepo(repoName);
+		//Repo tempRepo = VersionControlDb.findRepo(repoName);
 		//User tempUser = VersionControlDb.findUser(userName);	
 		for (int i = 0; i < pendingCheckIns.size(); i++) {
 			if (pendingCheckIns.get(i).getReponame().equals(repoName)){
 				//tempRepo.approveCheckIn(tempUser, pendingCheckIns.get(i));
-				tempRepo.queueCheckIn(pendingCheckIns.remove(i));
+				VersionControlDb.findRepo(repoName).queueCheckIn(pendingCheckIns.remove(i));
 				return ErrorType.SUCCESS;
 			}
 		}	
