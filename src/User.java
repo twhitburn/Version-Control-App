@@ -60,7 +60,7 @@ public class User {
 			throw new IllegalArgumentException();
 		}
 		for (int i = 0; i < workingCopies.size(); i++) {
-			if (workingCopies.get(i).equals(repoName)){
+			if (workingCopies.get(i).getReponame().equals(repoName)){
 				return workingCopies.get(i);
 			}
 		}
@@ -163,16 +163,17 @@ public class User {
 	 * @throws EmptyQueueException 
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
-	public ErrorType checkIn(String repoName) throws EmptyQueueException {
+	public ErrorType checkIn(String repoName) {
 		if (repoName == null) {
 			throw new IllegalArgumentException();
 		}
 		//find the Repo and user from DB class
 		Repo tempRepo = VersionControlDb.findRepo(repoName);
-		User tempUser = VersionControlDb.findUser(userName);	
+		//User tempUser = VersionControlDb.findUser(userName);	
 		for (int i = 0; i < pendingCheckIns.size(); i++) {
 			if (pendingCheckIns.get(i).getReponame().equals(repoName)){
-				tempRepo.approveCheckIn(tempUser, pendingCheckIns.get(i));
+				//tempRepo.approveCheckIn(tempUser, pendingCheckIns.get(i));
+				tempRepo.queueCheckIn(pendingCheckIns.remove(i));
 				return ErrorType.SUCCESS;
 			}
 		}	

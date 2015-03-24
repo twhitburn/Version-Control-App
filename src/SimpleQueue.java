@@ -11,7 +11,7 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 	public SimpleQueue() {
 		items = (E[])(new Object[INITSIZE]);
 		numItems = 0;
-		frontIndex = 0;
+		frontIndex = -1;
 		rearIndex = 0;
 	}
 
@@ -27,6 +27,7 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 			throw new EmptyQueueException();
 		}
 		E temp = items[frontIndex];
+		items[frontIndex] = null;
 		frontIndex++;
 		numItems--;
 		//need second thought here

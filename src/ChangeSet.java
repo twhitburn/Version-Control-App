@@ -34,6 +34,7 @@ public class ChangeSet {
 		}
 		Change temp = new Change(doc, type);
 		changes.enqueue(temp);
+		int i =0;
 		
 	}
 
