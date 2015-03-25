@@ -1,10 +1,29 @@
+///////////////////////////////////////////////////////////////////////////////
+//                   ALL STUDENTS COMPLETE THESE SECTIONS
+// Main Class File:  VersionControlApp.java
+// File:             Repo.java
+// Semester:         CS367 Spring 2015
+//
+// Author:           Thomas Whitburn
+// CS Login:         whitburn
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ////////////////////
+//
+// Pair Partner:     Haomin Li
+// Email:            hli256@wisc.edu
+// CS Login:         haomin
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////////////// 80 columns wide //////////////////////////////////
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents a repository which stores and tracks changes to a collection of 
  * documents.
- * @author
+ * @author Thomas Whitburn & Haomin Li
  *
  */
 public class Repo {
@@ -163,9 +182,7 @@ public class Repo {
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
 	public ErrorType approveCheckIn(User requestingUser, ChangeSet checkIn) throws EmptyQueueException {
-		// TODO: Implement this method. The following lines 
-		// are just meant for the method to compile. You can 
-		// remove or edit it whatever way you like.
+
 		if (requestingUser == null || checkIn == null) {
 			throw new IllegalArgumentException();
 		}
@@ -174,7 +191,7 @@ public class Repo {
 				Change temp = checkIn.getNextChange();
 				if (temp.getType() == Change.Type.ADD) {
 					docs.add(temp.getDoc());
-					
+
 				}
 				else if (temp.getType() == Change.Type.DEL) {
 					docs.remove(temp.getDoc());
@@ -207,9 +224,7 @@ public class Repo {
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
 	public ErrorType revert(User requestingUser) throws EmptyStackException {
-		// TODO: Implement this method. The following lines 
-		// are just meant for the method to compile. You can 
-		// remove or edit it whatever way you like.
+
 		if (requestingUser == null) {
 			throw new IllegalArgumentException();
 		}
@@ -223,7 +238,7 @@ public class Repo {
 			this.docs.addAll(versionRecords.peek().getDocuments());
 			return ErrorType.SUCCESS;
 		}
-		
+
 		return ErrorType.ACCESS_DENIED;
 	}
 }

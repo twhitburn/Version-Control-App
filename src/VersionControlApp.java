@@ -1,9 +1,41 @@
+///////////////////////////////////////////////////////////////////////////////
+//                   ALL STUDENTS COMPLETE THESE SECTIONS
+// Title:            VersionControlApp.java
+// Files:            
+//					VersionControlApp.java
+//					VersionControlDb.java
+//					User.java
+//					Repo.java
+//					RepoCopy.java
+//					Change.java
+//					ChangeSet.java
+//					StackADT.java
+//					QueueADT.java
+//					EmptyStackException.java
+//					EmptyQueueException.java
+//					Document.java
+//					ErrorType.java
+// Semester:         CS367 Spring 2015
+//
+// Author:           Thomas Whitburn
+// Email:            twhitburn@wisc.edu
+// CS Login:         whitburn
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ////////////////////
+//
+// Pair Partner:     Haomin Li
+// Email:            hli256@wisc.edu
+// CS Login:         haomin
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////////////// 80 columns wide //////////////////////////////////
 import java.util.Scanner;
 
 /**
  * Version control application. Implements the command line utility
  * for Version control.
- * @author
+ * <p>@author Thomas Whitburn & Haomin Li
  *
  */
 public class VersionControlApp {
@@ -286,8 +318,11 @@ public class VersionControlApp {
 				if (validateInput2(words)) {
 					String tempName = words[1];
 					ErrorType temp = logInUser.checkOut(tempName);
+					if (temp.equals(ErrorType.REPO_NOT_FOUND)) {
+						System.out.println(ErrorType.REPO_NOT_FOUND);
+					}
 					if (temp.equals(ErrorType.SUCCESS)) {
-						System.out.println("SUCCESS");
+						System.out.println(ErrorType.SUCCESS);
 						try {
 							processRepoMenu(logInUser, tempName);
 						} catch (EmptyQueueException e) {
@@ -295,7 +330,7 @@ public class VersionControlApp {
 						}	
 					}
 					else if (temp.equals(ErrorType.REPO_NOT_SUBSCRIBED)) {
-						System.out.println("REPO_NOT_SUBSCRIBED");
+						System.out.println(ErrorType.REPO_NOT_SUBSCRIBED);
 					}
 
 				}
@@ -327,6 +362,7 @@ public class VersionControlApp {
 	 * @throws IllegalArgumentException in case any argument is null.
 	 */
 	public static void processRepoMenu(User logInUser, String currRepo) throws EmptyQueueException, EmptyStackException {
+
 
 		if (logInUser  == null || currRepo == null) {
 			throw new IllegalArgumentException();
@@ -409,7 +445,7 @@ public class VersionControlApp {
 				break;
 			case DD:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle DD.
+
 					String docName = words[1];
 					//Prints DOCNAME_ALREADY_EXISTS, if the document with 
 					//<docname> already exists in the working copy
@@ -431,7 +467,7 @@ public class VersionControlApp {
 				break;
 			case VD:
 				if (validateInput2(words)) {
-					// TODO: Implement logic to handle VD.
+
 					String docName = words[1];
 					if (logInUser.getWorkingCopy(currRepo).getDoc(docName) 
 							== null) {
@@ -445,64 +481,64 @@ public class VersionControlApp {
 				break;
 			case CI:
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle CI.
+
 					System.out.println(logInUser.checkIn(currRepo));
 				}
 				break;
 			case CO:
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle CO.
 					System.out.println(logInUser.checkOut(currRepo));
 				}
 				break;
 			case RC:
 				if (validateInput1(words)) {
+					//Check for changes
+					if (VersionControlDb.findRepo(currRepo).getCheckInCount() == 0) {
+						System.out.println(ErrorType.NO_PENDING_CHECKINS);
+						break;
+					}
 					//Check user is admin
 					if (!logInUser.getName().equals(VersionControlDb.findRepo(currRepo).getAdmin().getName())) {
 						System.out.println(ErrorType.ACCESS_DENIED);
 						break;
 					}
-					//Check for changes
-					if (VersionControlDb.findRepo(currRepo).getCheckInCount() == 0) {
-						System.out.println(ErrorType.NO_LOCAL_CHANGES);
-					}
-					
+
+
 					SimpleQueue<ChangeSet> tempQueue = new SimpleQueue<ChangeSet>();
-					
+
 					for (int i = 0; i < VersionControlDb.findRepo(currRepo).getCheckInCount(); i++) {
-					//System.out.println(VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser).toString());	
-					ChangeSet temp = VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser);
-					tempQueue.enqueue(temp);
-					System.out.println(temp.toString());
+						//System.out.println(VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser).toString());	
+						ChangeSet temp = VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser);
+						tempQueue.enqueue(temp);
+						System.out.println(temp.toString());
 					}
 					//restore queue
 					for (int i = 0; i <tempQueue.size(); i++) {
 						VersionControlDb.findRepo(currRepo).queueCheckIn(tempQueue.dequeue());
 					}
-					
+
 					System.out.print("\nApprove changes? Press y to accept: ");
 					if (scnr.nextLine().equals("y")) {
-						
+
 						for (int i = 0; i < VersionControlDb.findRepo(currRepo).getCheckInCount(); i++) {
 							VersionControlDb.findRepo(currRepo).approveCheckIn(logInUser, VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser));
-							}
+						}
 						System.out.println(ErrorType.SUCCESS);
 					}
-				
-				
+
+
 				}
-				
+
 				break;
 			case VH:
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle VH.
+
 					System.out.println(VersionControlDb.findRepo(currRepo).
 							getVersionHistory());
 				}
 				break;
 			case RE:	
 				if (validateInput1(words)) {
-					// TODO: Implement logic to handle RE.
 					System.out.println(VersionControlDb.findRepo(currRepo).
 							revert(logInUser));
 				}
@@ -514,6 +550,7 @@ public class VersionControlApp {
 				break;
 			case QU:
 				if (validateInput1(words)) {
+					System.out.println(ErrorType.SUCCESS);
 					execute = false;
 				}
 				break;
@@ -536,7 +573,7 @@ public class VersionControlApp {
 		catch (Exception e) {
 			System.out.println(ErrorType.INTERNAL_ERROR);
 			// Uncomment this to print the stack trace for debugging purpose.
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		// Any clean up code goes here.
 		finally {

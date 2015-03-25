@@ -1,10 +1,29 @@
+///////////////////////////////////////////////////////////////////////////////
+//                   ALL STUDENTS COMPLETE THESE SECTIONS
+// Main Class File:  VersionControlApp.java
+// File:             User.java
+// Semester:         CS367 Spring 2015
+//
+// Author:           Thomas Whitburn
+// CS Login:         whitburn
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ////////////////////
+//
+// Pair Partner:     Haomin Li
+// Email:            hli256@wisc.edu
+// CS Login:         haomin
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////////////// 80 columns wide //////////////////////////////////
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents a user. Maintains the list of subscribed repositories, working
  * copy of the subscribed repositories and their changelist. 
- * @author
+ * <p>@author Thomas Whitburn & Haomin Li
  *
  */
 public class User {
@@ -164,16 +183,13 @@ public class User {
 	 * @throws IllegalArgumentException if any argument is null. 
 	 */
 	public ErrorType checkIn(String repoName) {
-		//TODO
+
 		if (repoName == null) {
 			throw new IllegalArgumentException();
 		}
-		//find the Repo and user from DB class
-		//Repo tempRepo = VersionControlDb.findRepo(repoName);
-		//User tempUser = VersionControlDb.findUser(userName);	
+		//find the Repo and user from DB class	
 		for (int i = 0; i < pendingCheckIns.size(); i++) {
 			if (pendingCheckIns.get(i).getReponame().equals(repoName)){
-				//tempRepo.approveCheckIn(tempUser, pendingCheckIns.get(i));
 				VersionControlDb.findRepo(repoName).queueCheckIn(pendingCheckIns.remove(i));
 				return ErrorType.SUCCESS;
 			}
@@ -221,6 +237,10 @@ public class User {
 		return ErrorType.REPO_NOT_SUBSCRIBED;
 	}
 
+	/**
+	 *  Returns the string representation of the user object.
+	 *
+	 */
 	@Override
 	public String toString() {
 		String str = "=================================== \n";

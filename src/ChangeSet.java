@@ -1,6 +1,25 @@
+///////////////////////////////////////////////////////////////////////////////
+//                   ALL STUDENTS COMPLETE THESE SECTIONS
+// Main Class File:  VersionControlApp.java
+// File:             ChangeSet.java
+// Semester:         CS367 Spring 2015
+//
+// Author:           Thomas Whitburn
+// CS Login:         whitburn
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ////////////////////
+//
+// Pair Partner:     Haomin Li
+// Email:            hli256@wisc.edu
+// CS Login:         haomin
+// Lecturer's Name:  Jim Skrentny
+//
+//////////////////////////// 80 columns wide //////////////////////////////////
+
 /**
  * Represents a set of change(s) made to a repository.
- * @author
+ * <p>@author Thomas Whitburn & Haomin Li
  *
  */
 public class ChangeSet {
@@ -17,7 +36,7 @@ public class ChangeSet {
 	 * @throws IllegalArgumentException if any argument is null.
 	 */
 	public ChangeSet(String repoName) {
-		
+
 		this.repoName = repoName;
 		this.changes = new SimpleQueue<Change>();
 	}
@@ -34,8 +53,7 @@ public class ChangeSet {
 		}
 		Change temp = new Change(doc, type);
 		changes.enqueue(temp);
-		int i =0;
-		
+
 	}
 
 	/**
@@ -52,7 +70,7 @@ public class ChangeSet {
 	 * @throws EmptyQueueException 
 	 */
 	public Change getNextChange() throws EmptyQueueException {
-			return changes.dequeue();
+		return changes.dequeue();
 	}
 
 	/**
@@ -60,11 +78,14 @@ public class ChangeSet {
 	 * @return The count of changes.
 	 */
 	public int getChangeCount() {
-		
-		return changes.size();
-		
-	}
 
+		return changes.size();
+
+	}
+	
+	/**
+	 * Returns the string representation of the ChangeSet.
+	 */
 	@Override
 	public String toString() {
 		return this.changes.toString();	
