@@ -32,6 +32,7 @@ public class SimpleStack<E> implements StackADT<E> {
 	 * SimpleStack constructor. Initializes to size 10. 
 	 *
 	 */
+	@SuppressWarnings("unchecked")
 	public SimpleStack() {
 		items = (E[])(new Object[INITSIZE]);
 		numItems = 0;
@@ -73,6 +74,7 @@ public class SimpleStack<E> implements StackADT<E> {
 	 * Adds an item to the top of the Stack. 
 	 * @param item item to be put in Stack.
 	 */
+	@SuppressWarnings("unchecked")
 	public void push(E item) {
 		if (items.length == numItems) {
 			E tempitems[] = items;

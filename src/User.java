@@ -142,6 +142,7 @@ public class User {
 		if (doc == null || type == null || repoName == null) {
 			throw new IllegalArgumentException();
 		}
+		//add the changeSet to the appropriate repo
 		for (int i = 0; i < pendingCheckIns.size(); i++) {
 			if (pendingCheckIns.get(i).getReponame().equals(repoName)) {
 				pendingCheckIns.get(i).addChange(doc, type);

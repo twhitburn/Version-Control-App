@@ -186,16 +186,20 @@ public class Repo {
 		if (requestingUser == null || checkIn == null) {
 			throw new IllegalArgumentException();
 		}
+		//if the requestingUser is the admin, we excute this
 		if (requestingUser.equals(admin)) {
 			for (int i = 0; i < checkIn.getChangeCount(); i++) {
 				Change temp = checkIn.getNextChange();
+				//add, if change type is ADD
 				if (temp.getType() == Change.Type.ADD) {
 					docs.add(temp.getDoc());
 
 				}
+				//delete, if change type is DEL
 				else if (temp.getType() == Change.Type.DEL) {
 					docs.remove(temp.getDoc());
 				}
+				//otherwise, edit (remove existing thing and add changed)
 				else {
 					for (int j = 0; j < docs.size(); j++) {
 						if (docs.get(j).getName().equals(temp.getDoc().getName())){

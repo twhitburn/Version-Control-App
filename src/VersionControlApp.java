@@ -318,8 +318,9 @@ public class VersionControlApp {
 				if (validateInput2(words)) {
 					String tempName = words[1];
 					ErrorType temp = logInUser.checkOut(tempName);
-					if (temp.equals(ErrorType.REPO_NOT_FOUND)) {
+					if (VersionControlDb.findRepo(tempName) == null) {
 						System.out.println(ErrorType.REPO_NOT_FOUND);
+						break;
 					}
 					if (temp.equals(ErrorType.SUCCESS)) {
 						System.out.println(ErrorType.SUCCESS);
@@ -361,7 +362,8 @@ public class VersionControlApp {
 	 * @throws EmptyStackException 
 	 * @throws IllegalArgumentException in case any argument is null.
 	 */
-	public static void processRepoMenu(User logInUser, String currRepo) throws EmptyQueueException, EmptyStackException {
+	public static void processRepoMenu(User logInUser, String currRepo) 
+			throws EmptyQueueException, EmptyStackException {
 
 
 		if (logInUser  == null || currRepo == null) {
@@ -498,7 +500,8 @@ public class VersionControlApp {
 						break;
 					}
 					//Check user is admin
-					if (!logInUser.getName().equals(VersionControlDb.findRepo(currRepo).getAdmin().getName())) {
+					if (!logInUser.getName().equals(VersionControlDb.
+							findRepo(currRepo).getAdmin().getName())) {
 						System.out.println(ErrorType.ACCESS_DENIED);
 						break;
 					}
@@ -506,22 +509,27 @@ public class VersionControlApp {
 
 					SimpleQueue<ChangeSet> tempQueue = new SimpleQueue<ChangeSet>();
 
-					for (int i = 0; i < VersionControlDb.findRepo(currRepo).getCheckInCount(); i++) {
-						//System.out.println(VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser).toString());	
-						ChangeSet temp = VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser);
+					for (int i = 0; i < VersionControlDb.findRepo(currRepo).
+							getCheckInCount(); i++) {
+						ChangeSet temp = VersionControlDb.findRepo(currRepo).
+								getNextCheckIn(logInUser);
 						tempQueue.enqueue(temp);
 						System.out.println(temp.toString());
 					}
 					//restore queue
 					for (int i = 0; i <tempQueue.size(); i++) {
-						VersionControlDb.findRepo(currRepo).queueCheckIn(tempQueue.dequeue());
+						VersionControlDb.findRepo(currRepo).
+						queueCheckIn(tempQueue.dequeue());
 					}
 
 					System.out.print("\nApprove changes? Press y to accept: ");
 					if (scnr.nextLine().equals("y")) {
 
-						for (int i = 0; i < VersionControlDb.findRepo(currRepo).getCheckInCount(); i++) {
-							VersionControlDb.findRepo(currRepo).approveCheckIn(logInUser, VersionControlDb.findRepo(currRepo).getNextCheckIn(logInUser));
+						for (int i = 0; i < VersionControlDb.findRepo(currRepo)
+								.getCheckInCount(); i++) {
+							VersionControlDb.findRepo(currRepo).
+							approveCheckIn(logInUser, VersionControlDb.
+									findRepo(currRepo).getNextCheckIn(logInUser));
 						}
 						System.out.println(ErrorType.SUCCESS);
 					}
