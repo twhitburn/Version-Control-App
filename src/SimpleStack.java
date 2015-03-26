@@ -76,6 +76,9 @@ public class SimpleStack<E> implements StackADT<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void push(E item) {
+		if (item == null) {
+			throw new IllegalArgumentException();
+		}
 		if (items.length == numItems) {
 			E tempitems[] = items;
 			items = (E[])(new Object[2*INITSIZE]);

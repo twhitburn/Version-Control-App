@@ -78,7 +78,9 @@ public class SimpleQueue<E> implements QueueADT<E>  {
 	 */
 	@SuppressWarnings("unchecked")
 	public void enqueue(E item) {
-
+		if (item == null) {
+			throw new IllegalArgumentException();
+		}
 		if (numItems == items.length) {
 			E tempitems[] = items;
 			items = (E[])(new Object[2*INITSIZE]);
